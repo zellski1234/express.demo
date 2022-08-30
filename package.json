@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "express": "^4.18.1"
+    "express": "^4.18.1",
+    "mongoose": "^6.5.3"
   },
   "name": "express_demo",
   "version": "1.0.0",
