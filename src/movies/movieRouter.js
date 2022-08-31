@@ -1,15 +1,21 @@
 const { Router } = require("express")
 const movieRouter = Router()
-const {listMovies, listTitles, listActors, 
+const {listMovies, listTitles, listActors, listMovie, 
         addMovie, deleteMovie, editMovie} = require("./movieControllers")
 
-// ---------------------- list ----------------------
+// ---------------------- create ----------------------
+movieRouter.post("/movie", addMovie);
+
+// ---------------------- read ----------------------
 movieRouter.get("/movie", listMovies);
 movieRouter.get("/movie/titles", listTitles);
+movieRouter.get("/movie/title", listMovie);
 movieRouter.get("/movie/actors", listActors);
 
-movieRouter.post("/movie", addMovie);
-movieRouter.delete("/movie", deleteMovie)
+// ---------------------- update ----------------------
 movieRouter.put("/movie", editMovie)
+
+// ---------------------- delete ----------------------
+movieRouter.delete("/movie", deleteMovie)
 
 module.exports = movieRouter

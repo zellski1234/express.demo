@@ -1,6 +1,6 @@
 const Users = require("./userModel");
 
-// --------------------------------------------------- List user ----------------------------------------------------
+// --------------------------------------------------- List User ----------------------------------------------------
 exports.listUsers = async (req, res) => {
     try {
         let UserList = await Users.find({});
@@ -39,7 +39,7 @@ exports.listUsername = async (req, res) => {
         console.log(e)
     }
 }
-// --------------------------------------------------- Add user ----------------------------------------------------
+// --------------------------------------------------- Add User ----------------------------------------------------
 exports.addUser = async (req, res) => {
     try {
         if (req.body.username && req.body.password){
@@ -52,10 +52,9 @@ exports.addUser = async (req, res) => {
             res.status(400).send({error: "requires username and password"})
         }
     } catch (e) {
-        if (e == 11000) {
+        if (e.code == 11000) {
             console.log("User already exists!")
             res.status(401).send({error:"User already exists!"})
-            // console.log(e.code)
         }
         else {
             console.log("error in add user")
@@ -65,7 +64,7 @@ exports.addUser = async (req, res) => {
 
     }
 }
-// ------------------------------------------------- Delete user --------------------------------------------------
+// ------------------------------------------------- Delete User --------------------------------------------------
 exports.deleteUser = async (req, res) => {
     try {
         let userList = await Users.find({})
@@ -83,7 +82,7 @@ exports.deleteUser = async (req, res) => {
         console.log(e)
     }
 }
-// -------------------------------------------------- Edit user --------------------------------------------------
+// -------------------------------------------------- Edit User --------------------------------------------------
 exports.editUser = async (req, res) => {
     try {
         let userList = await Users.find({})

@@ -13,7 +13,7 @@ userRouter.get("/user/username", listUsername);
 userRouter.put("/user", editUser);
 
 // ---------------------- delete ----------------------
-userRouter.delete("/movie", deleteUser);
+userRouter.delete("/user", deleteUser);
 
 
 module.exports = userRouter
