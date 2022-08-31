@@ -20,7 +20,7 @@ exports.listUsers = async (req, res) => {
 }
 exports.listUsername = async (req, res) => {
     try {
-        let userList = await users.find({});
+        let userList = await Users.find({});
         if (userList.length > 0){
             console.log("inside listUsername")
             let username = []
