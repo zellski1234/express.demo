@@ -52,9 +52,16 @@ exports.addUser = async (req, res) => {
             res.status(400).send({error: "requires username and password"})
         }
     } catch (e) {
-        console.log("error in add user")
-        res.status(500).send({error:"internal server error"})
-        console.log(e)
+        if (e == 11000) {
+            console.log("User already exists!")
+            res.status(401).send({error:"User already exists!"})
+            // console.log(e.code)
+        }
+        else {
+            console.log("error in add user")
+            res.status(500).send({error:"internal server error"})
+            console.log(e)
+        }
 
     }
 }
