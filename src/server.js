@@ -8,6 +8,7 @@ require("./db/connection");
 // app.use(express.static("public"))
 app.use(express.json());
 app.use(movieRouter);
+app.use(userRouter);
 
 
 app.listen(port, () => {
