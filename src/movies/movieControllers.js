@@ -7,6 +7,6 @@ exports.listMovies = (req, res) => {
 }
 
 exports.addMovie = async (req, res) => {
-    await Movies.create({title: res.query.title, actor: res.query.actor});
-    res.status(201).send({title: res.query.title, actor: res.query.actor})
+    await Movies.create({title: req.body.title, actor: req.body.actor});
+    res.status(201).send({title: req.body.title, actor: req.body.actor})
 }
