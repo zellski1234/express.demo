@@ -1,12 +1,12 @@
 const Movies = require("./movieModel");
 
-// ---------------------------------------------------- List Movie ----------------------------------------------------
-exports.listMovie = async (req, res) => {
+// --------------------------------------------------- List Movie ----------------------------------------------------
+exports.listMovies = async (req, res) => {
     try {
         let movieList = await Movies.find({});
         if (movieList.length > 0){
             console.log("inside listMovie")
-            res.status(200).send({movieList});
+            res.status(200).send(movieList);
         }
         else {
             console.log("Nothing to display")
@@ -18,13 +18,56 @@ exports.listMovie = async (req, res) => {
         console.log(e)
     }
 }
-// ---------------------------------------------------- Add Movie ----------------------------------------------------
+exports.listTitles = async (req, res) => {
+    try {
+        let movieList = await Movies.find({});
+        if (movieList.length > 0){
+            console.log("inside listTitles")
+            let title = []
+            for(let i = 0; i < movieList.length; i++){
+                title.push(i+1, movieList[i].title)
+            }
+            res.status(200).send(title);
+        }
+        else {
+            console.log("Nothing to display")
+            res.status(400).send({error: "request failed"})
+        }
+    } catch (e) {
+        console.log("error in listTitles")
+        res.status(500).send({error:"internal server error"})
+        console.log(e)
+    }
+}
+exports.listActors = async (req, res) => {
+    try {
+        let movieList = await Movies.find({});
+        if (movieList.length > 0){
+            console.log("inside listActors")
+            let title = []
+            for(let i = 0; i < movieList.length; i++){
+                title.push(i+1, movieList[i].actor)
+            }
+            res.status(200).send(title);
+        }
+        else {
+            console.log("Nothing to display")
+            res.status(400).send({error: "request failed"})
+        }
+    } catch (e) {
+        console.log("error in listActors")
+        res.status(500).send({error:"internal server error"})
+        console.log(e)
+    }
+}
+
+// --------------------------------------------------- Add Movie ----------------------------------------------------
 exports.addMovie = async (req, res) => {
     try {
         if (req.body.title && req.body.actor){
             console.log(req.body)
             await Movies.create({title: req.body.title, actor: req.body.actor});
-            res.status(201).send({title: req.body.title, actor: req.body.actor});
+            res.status(201).send(await Movies.find({}));
         }
         else {
             console.log("no title or actor found")
@@ -37,7 +80,7 @@ exports.addMovie = async (req, res) => {
 
     }
 }
-// ---------------------------------------------------- Delete Movie ----------------------------------------------------
+// ------------------------------------------------- Delete Movie --------------------------------------------------
 exports.deleteMovie = async (req, res) => {
     try {
         let movieList = await Movies.find({})
@@ -55,13 +98,21 @@ exports.deleteMovie = async (req, res) => {
         console.log(e)
     }
 }
-// ---------------------------------------------------- Edit Movie ----------------------------------------------------
+// -------------------------------------------------- Edit Movie --------------------------------------------------
 exports.editMovie = async (req, res) => {
     try {
-        await Movies.updateOne({ title: req.body.title, actor: req.body.actor }, { title: req.body.titleR, actor: req.body.actorR })
-        res.status(200).send(await Movies.find({}))
+        let movieList = await Movies.find({})
+        if(movieList.length > 0){
+            await Movies.updateOne(
+                { title: req.body.title, actor: req.body.actor }, 
+                { title: req.body.newT, actor: req.body.newA })
+            res.status(200).send(await Movies.find({}))
+        }
+        else {
+            console.log("Nothing to edit")
+            res.status(400).send({error: "request failed"})
+        }
     } catch (e) {
-
         console.log("error in edit Movie")
         res.status(500).send({error:"internal server error"})
         console.log(e)
