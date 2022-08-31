@@ -62,7 +62,7 @@ exports.listActors = async (req, res) => {
 }
 exports.listMovie = async (req, res) => {
     try {
-        let movieTitle = await Movies.find({title: req.body.title});
+        let movieTitle = await Movies.find({title: req.query.title});
         if (movieTitle.length === 0){
             res.status(404).send({message: "Movie not found"})
             console.log(movieTitle + " Movie not found")
@@ -77,6 +77,27 @@ exports.listMovie = async (req, res) => {
         }
     } catch (e) {
         console.log("error in listMovie")
+        res.status(500).send({error:"internal server error"})
+        console.log(e)
+    }
+}
+exports.listActor = async (req, res) => {
+    try {
+        let movieTitle = await Movies.find({actor: req.query.actor});
+        if (movieTitle.length === 0){
+            res.status(404).send({message: "Actor not found"})
+            console.log(movieTitle + " Actor not found")
+        }
+        else if (movieTitle.length > 0){
+            console.log(movieTitle + " inside listActor")
+            res.status(200).send(movieTitle);
+        }
+        else {
+            console.log("Nothing to display")
+            res.status(400).send({error: "request failed"})
+        }
+    } catch (e) {
+        console.log("error in listActor")
         res.status(500).send({error:"internal server error"})
         console.log(e)
     }
