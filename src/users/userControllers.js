@@ -1,4 +1,5 @@
-const Users = require("./userModel");
+const User = require("./userModel");
+
 
 // --------------------------------------------------- List User ----------------------------------------------------
 exports.listUsers = async (req, res) => {
@@ -42,25 +43,31 @@ exports.listUsername = async (req, res) => {
 // --------------------------------------------------- Add User ----------------------------------------------------
 exports.addUser = async (req, res) => {
     try {
-        if (req.body.username && req.body.password){
-            console.log(req.body)
-            await Users.create({username: req.body.username, password: req.body.password});
-            res.status(201).send(await Users.find({}));
-        }
-        else {
-            console.log("requires username and password")
-            res.status(400).send({error: "requires username and password"})
-        }
+        const newUser = new User(req.body)
+        console.log(newUser)
+        res.status(201).send({ user: newUser.name })
+
+        // if (req.body.username && req.body.password){
+        //     console.log(req.body)
+        //     await Users.create({username: req.body.username, password: req.body.password});
+        //     res.status(201).send(await Users.find({}));
+        // }
+        // else {
+        //     console.log("requires username and password")
+        //     res.status(400).send({error: "requires username and password"})
+        // }
     } catch (e) {
-        if (e.code == 11000) {
-            console.log("User already exists!")
-            res.status(401).send({error:"User already exists!"})
-        }
-        else {
-            console.log("error in add user")
-            res.status(500).send({error:"internal server error"})
-            console.log(e)
-        }
+
+        res.status(500).send({error: "Oops"})
+        // if (e.code == 11000) {
+        //     console.log("User already exists!")
+        //     res.status(401).send({error:"User already exists!"})
+        // }
+        // else {
+        //     console.log("error in add user")
+        //     res.status(500).send({error:"internal server error"})
+        //     console.log(e)
+        // }
 
     }
 }

@@ -3,7 +3,7 @@ const userRouter = Router()
 const {listUsers, listUsername, addUser, deleteUser, editUser} = require("./userControllers")
 
 // ---------------------- create ----------------------
-userRouter.post("/user", addUser);
+userRouter.post("/user/signup", addUser);
         
 // ---------------------- read ----------------------
 userRouter.get("/user", listUsers);
