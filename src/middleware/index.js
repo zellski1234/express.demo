@@ -1,4 +1,6 @@
-const bcrypt = require("bcryptjs")
+const bcrypt = require("bcryptjs");
+const jwt  = require("jsonwebtoken");
+const User = require("../users/userModel")
 
 exports.hashPassword = async (req, res, next) => {
     try {
@@ -14,4 +16,22 @@ exports.hashPassword = async (req, res, next) => {
 
     }
 
-}
+};
+
+exports.tokenCheck = async (req, res, next) => {
+    try {
+        const token = req.header("Authorization").replace("Bearer ", "");
+        const decoded = jwt.verify(token, "some secret");
+        const user = await User.findOne({_id: decoded._id});
+
+        if (!user){
+            throw new Error("User does not exist")
+        }
+
+        req.user = user
+        next()
+
+    } catch (error) {
+        res.status(500).send({ error: "Please log in" });
+    }
+};
