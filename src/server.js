@@ -1,39 +1,19 @@
 const express = require("express");
+require("./db/connection");
+const userRouter = require("./users/userRoutes")
+const movieRouter = require("./movies/movieRouter")
+const { tokenCheck } = require("./middleware");
+
 const app = express();
 const port = process.env.PORT || 5000
 
-
 // app.use(express.static("public"))
-
-app.get("/", (req, res)=> {
-	res.send("Hi my name is Dan")
-
-});
-
-app.get("/hello", (req, res)=> {
-	console.log(req.query.name)
-
-	if (req.query.name){
-		res.send({ name: req.query.name});
-	}
-	else {
-		res.send({error: "no name found"})
-	}
-});
-
-app.get("/myinfo", (req, res)=> {
-	res.send({
-		name: "Hamza",
-		age: "25"});
-});
-// http://localhost:5000/hello?name=dan&age=35&somethingelse
-
-app.get("/users/:id", (req, res)=> {
-	console.log(req.params.id)
-
-	res.send({id: req.params.id})
-});
-
+app.use(express.json());
+app.use(userRouter);
+app.use(movieRouter);
+app.get("/", tokenCheck, (req, res) => {
+	res.status(200).send({ message: "You should only see if this if you are logged in" });
+  });
 
 app.listen(port, () => {
 	console.log(`listening on port ${port}`)
