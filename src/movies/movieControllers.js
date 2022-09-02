@@ -124,10 +124,24 @@ exports.addMovie = async (req, res) => {
 // ------------------------------------------------- Delete Movie --------------------------------------------------
 exports.deleteMovie = async (req, res) => {
     try {
-        let movieList = await Movies.find({})
-        if ((req.body.title && req.body.actor) && movieList.length > 0){
+        let title = await Movies.find({title: req.body.title})
+        if ((req.body.title && req.body.actor) && title.length > 0){
             await Movies.deleteOne({ title: req.body.title, actor: req.body.actor })
             res.status(200).send(await Movies.find({}))
+        }
+        else if ((req.body.title && !req.body.actor) && title.length > 0){
+            await Movies.deleteOne({ title: req.body.title})
+            res.status(200).send(await Movies.find({}))
+        } 
+        else if (title.length > 0 && (!req.body.title && req.body.actor)) {
+            res.status(400).send({error: "Please specify movie you want to delete by specifying title or title and actor not just actor!"})
+        }
+        else if (title.length > 0 && (!req.body.title || !req.body.actor) ){
+            console.log("Please specify movie you want to delete by specifying title or title and actor")
+            res.status(400).send({error: "Please specify movie you want to delete by specifying title or title and actor!"})
+        } else if (title.length < 1){
+            console.log("Nothing to delete")
+            res.status(404).send({error: "Movie not found"})            
         }
         else {
             console.log("Nothing to delete")
@@ -142,12 +156,42 @@ exports.deleteMovie = async (req, res) => {
 // -------------------------------------------------- Edit Movie --------------------------------------------------
 exports.editMovie = async (req, res) => {
     try {
-        let movieList = await Movies.find({})
-        if(movieList.length > 0){
+        let title = await Movies.find({title: req.body.title})
+        // update title using title key and new title key
+        if(title.length > 0 && (req.body.title && req.body.newT && (!req.body.actor || !req.body.newA))){
+            await Movies.updateOne(title, {title: req.body.newT})
+            res.status(200).send(await Movies.find({}))
+        }// update movie actor using title key and new actor 
+        else if(title.length > 0 && (req.body.title && req.body.newA && (!req.body.actor || !req.body.newT))){
+            await Movies.updateOne(title, {actor: req.body.newA})
+            res.status(200).send(await Movies.find({}))
+        }// update movie and actor using all keys
+        else if(title.length > 0 && (req.body.title && req.body.newT && req.body.actor && req.body.newA)){
             await Movies.updateOne(
                 { title: req.body.title, actor: req.body.actor }, 
                 { title: req.body.newT, actor: req.body.newA })
             res.status(200).send(await Movies.find({}))
+        }// update actor by specfiying movie actor and title and new actor
+        else if (title.length > 0 && (req.body.actor && req.body.title && req.body.newA && !req.body.newT)){
+            await Movies.updateOne(
+                { title: req.body.title, actor: req.body.actor }, 
+                {actor: req.body.newA })
+            res.status(200).send(await Movies.find({}))
+        }  // update title by specfiying movie actor and title and new title
+        else if (title.length > 0 && (req.body.actor && req.body.title && !req.body.newA && req.body.newT)){
+            await Movies.updateOne(
+                { title: req.body.title, actor: req.body.actor }, 
+                {actor: req.body.newA })
+            res.status(200).send(await Movies.find({}))
+        } 
+        
+        // if you try to update movie using actor only and new actor and actor using all keys
+        else if (title.length > 0 && (req.body.newA && req.body.actor && (!req.body.title || !req.body.newT))){ 
+            console.log("Need to specify Title!")
+            res.status(405).send({error: `Requires "title" key `})
+        } else if (title.length < 1){
+            console.log("Nothing to edit")
+            res.status(404).send({error: "Movie not found"})
         }
         else {
             console.log("Nothing to edit")

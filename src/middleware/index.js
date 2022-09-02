@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt  = require("jsonwebtoken");
 const User = require("../users/userModel")
+require("dotenv").config();
 
 exports.hashPassword = async (req, res, next) => {
     try {
@@ -21,7 +22,7 @@ exports.hashPassword = async (req, res, next) => {
 exports.tokenCheck = async (req, res, next) => {
     try {
         const token = req.header("Authorization").replace("Bearer ", "");
-        const decoded = jwt.verify(token, "some secret");
+        const decoded = jwt.verify(token, process.env.SECRET);
         const user = await User.findOne({_id: decoded._id});
 
         if (!user){
@@ -32,6 +33,6 @@ exports.tokenCheck = async (req, res, next) => {
         next()
 
     } catch (error) {
-        res.status(500).send({ error: "Please log in" });
+        res.status(403).send({ error: "Please log in" });
     }
 };
