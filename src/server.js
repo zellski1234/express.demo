@@ -26,11 +26,10 @@ app.get("/myinfo", (req, res)=> {
 		name: "Hamza",
 		age: "25"});
 });
-// http://localhost:5000/hello?name=dan&age=35&somethingelse
 
 app.get("/users/:id", (req, res)=> {
 	console.log(req.params.id)
-
+	
 	res.send({id: req.params.id})
 });
 
@@ -38,3 +37,4 @@ app.get("/users/:id", (req, res)=> {
 app.listen(port, () => {
 	console.log(`listening on port ${port}`)
 })
+// http://localhost:5000/hello?name=dan&age=35&somethingelse
